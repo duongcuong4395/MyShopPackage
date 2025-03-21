@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-protocol ImageCloudService {
+public protocol ImageCloudService {
     func uploadImage(imageData: Data, completion: @escaping (String?) -> Void)
     func deleteImage(imageUrl: String, completion: @escaping (Bool) -> Void)
 }
-
-extension ImageCloudService {
+ 
+public extension ImageCloudService {
     /// Trích xuất `publicId` từ URL Cloudinary
     func extractPublicId(from url: String) -> String? {
         let components = url.components(separatedBy: "/")
