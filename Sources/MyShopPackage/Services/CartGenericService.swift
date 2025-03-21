@@ -37,6 +37,16 @@ public extension CartServiceGeneric {
     var totalAmount: Double {
         cartItems.reduce(0) { $0 + ($1.product.price * Double($1.quantity)) }
     }
+    
+    var categoryItemCount: [CategoryDT: Int] {
+        var countDict: [CategoryDT: Int] = [:]
+        
+        for item in cartItems {
+            countDict[item.product.category, default: 0] += item.quantity
+        }
+        
+        return countDict
+    }
 }
 
 public extension CartServiceGeneric {
