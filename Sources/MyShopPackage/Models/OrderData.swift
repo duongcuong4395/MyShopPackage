@@ -118,13 +118,13 @@ public protocol CategoryData: Codable, Identifiable, Hashable {
 }
 
 // MARK: Extension For Logic
-extension Double {
+public extension Double {
     func convertMoney() -> String {
         return (NumberFormatter.currencyFormatter.string(from: NSNumber(value: self)) ?? "0") + " đ"
     }
 }
 
-extension NumberFormatter {
+public extension NumberFormatter {
     static let currencyFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal // Hiển thị theo kiểu 123.456.789
