@@ -16,7 +16,7 @@ public struct ListProductGeneralView<
     private var products: [ProductDT]
     @State private var column = Array(repeating: GridItem(.flexible(), spacing: 1), count: 2)
     
-    init(service: Service, products: [ProductDT]) {
+    public init(service: Service, products: [ProductDT]) {
         self.service = service
         self.products = products
     }
