@@ -8,6 +8,7 @@
 import SwiftUI
 
 public struct ProductItemGenericView<
+    
     ProductDT: ProductData
         , Service: CartServiceGeneric & ObservableObject>: View, @preconcurrency ItemDelegate
 where Service.ProductDT == ProductDT
@@ -15,14 +16,29 @@ where Service.ProductDT == ProductDT
     
     @ObservedObject private var service: Service
     private var product: ProductDT
+    @State private var cartItem: Service.CartItemDT?
     
     public init(service: Service, product: ProductDT) {
         self.service = service
         self.product = product
+        
+        self._cartItem = State(initialValue: service.getCartItem(form: product))
     }
     
     public var body: some View {
-        //product.getItemView(and: EmptyView())
+        if #available(iOS 17.0, *) {
+            product.getItemView(and: optionsView)
+                .onAppear{
+                    cartItem = service.getCartItem(form: product)
+                }
+                .onChange(of: service.cartItems) { oldValue, newValue in
+                    cartItem = service.getCartItem(form: product)
+                }
+        } else {
+            // Fallback on earlier versions
+        }
+        
+        /*
         VStack {
             ProductImageGenericView(product: product)
             Spacer()
@@ -35,30 +51,22 @@ where Service.ProductDT == ProductDT
             }
         }
         .padding(5)
-        
+        */
     }
     
+    @ViewBuilder
     var optionsView: some View {
         
         HStack {
             Spacer()
             
-            if let cartItem = service.getCartItem(form: product) {
+            //if let cartItem = service.getCartItem(form: product) {
+            if let cartItem = cartItem {
                 HStack(spacing: 20) {
                     product.getBtnPlusProduct(with: .Button, with: self)
                         .font(.body.bold())
                         .foregroundStyle(.green)
-                    /*
-                    Button(action: {
-                        withAnimation {
-                            service.addToCart(product)
-                        }
-                    }, label: {
-                        Image(systemName: "plus")
-                            .font(.body.bold())
-                            .foregroundStyle(.green)
-                    })
-                    */
+                    
 
                     Text("\(cartItem.quantity)")
                         .font(.body.bold())
@@ -67,17 +75,6 @@ where Service.ProductDT == ProductDT
                     product.getBtnMinusProduct(with: .Button, with: self)
                         .font(.body.bold())
                         .foregroundStyle(.green)
-                    /*
-                    Button(action: {
-                        withAnimation {
-                            service.removeFromCart(product, forAll: false)
-                        }
-                    }, label: {
-                        Image(systemName: "minus")
-                            .font(.body.bold())
-                            .foregroundStyle(.green)
-                    })
-                    */
                 }
                 .padding(3)
                 .background(.white)
@@ -99,6 +96,15 @@ where Service.ProductDT == ProductDT
         }
     }
     
+   
+}
+
+
+
+
+
+
+extension ProductItemGenericView {
     //@MainActor
     public func plusProduct<T>(for model: T) where T : Decodable {
         guard let model = model as? ProductDT else { return }
@@ -110,6 +116,3 @@ where Service.ProductDT == ProductDT
         service.removeFromCart(model, forAll: false)
     }
 }
-
-
-

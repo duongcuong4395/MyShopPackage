@@ -31,19 +31,20 @@ public struct ListProductGeneralView<
                     ForEach(products, id: \.id) { product in
                         
                         ProductItemGenericView(service: service, product: product)
-                        .padding(5)
-                       .overlay {
-                           VStack{
-                               Spacer()
-                               CartItemOptionGenericView(service: service, product: product)
-                               .padding(.bottom, 60)
-                               .padding(.trailing, 7)
-                           }
-                       }
                         
                         /*
-                         
+                         .padding(5)
+                        .overlay {
+                            VStack{
+                                Spacer()
+                                CartItemOptionGenericView(service: service, product: product)
+                                .padding(.bottom, 60)
+                                .padding(.trailing, 7)
+                            }
+                        }
                         */
+
+                        
                     }
                 }
             }
@@ -51,3 +52,5 @@ public struct ListProductGeneralView<
     }
     
 }
+
+

@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-
-public protocol ProductData: Codable, Identifiable, Hashable, ItemOptionsBuilder {
+// Codable
+public protocol ProductData: Identifiable, Hashable, ItemOptionsBuilder {
     associatedtype CategoryType: CategoryData
     var id: String { get set }
     var name: String { get set }
@@ -24,10 +24,6 @@ public protocol ProductData: Codable, Identifiable, Hashable, ItemOptionsBuilder
 }
 
 public extension ProductData {
-    func convertMoney() -> String {
-        return price.convertMoney()// (NumberFormatter.currencyFormatter.string(from: NSNumber(value: price)) ?? "0") + " đ"
-    }
-    
     
     @MainActor
     @ViewBuilder
@@ -52,5 +48,14 @@ public extension ProductData {
             }
         }
     }
+}
+
+public extension ProductData {
+    func convertMoney() -> String {
+        return price.convertMoney()// (NumberFormatter.currencyFormatter.string(from: NSNumber(value: price)) ?? "0") + " đ"
+    }
+    
+    
+    
 }
 

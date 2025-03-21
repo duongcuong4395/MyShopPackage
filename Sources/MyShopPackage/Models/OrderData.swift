@@ -166,7 +166,7 @@ public enum IconDetailType: String {
     case Plus = "plus"
 }
 
-public protocol ItemOptionsBuilder: Decodable { }
+public protocol ItemOptionsBuilder: Codable { }
 
 public extension ItemOptionsBuilder {
     
