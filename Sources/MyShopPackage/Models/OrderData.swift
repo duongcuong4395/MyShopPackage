@@ -121,6 +121,8 @@ public protocol CategoryData: Codable, Identifiable, Hashable {
     var name: String { get }
     var imageName: String { get }
     var xIndex: CGFloat { get }
+    
+    init()
 }
 
 // MARK: Extension For Logic
