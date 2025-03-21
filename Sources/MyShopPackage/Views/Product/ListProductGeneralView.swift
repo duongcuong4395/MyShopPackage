@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+
 public struct ListProductGeneralView<
     ProductDT: ProductData,
       Service: CartServiceGeneric & ObservableObject>: View
@@ -14,6 +16,7 @@ public struct ListProductGeneralView<
 
     @ObservedObject private var service: Service
     private var products: [ProductDT]
+    private var ViewApplyFor: ViewApplyFor = .BuyProduct
     @State private var column = Array(repeating: GridItem(.flexible(), spacing: 1), count: 2)
     
     public init(service: Service, products: [ProductDT]) {
@@ -26,8 +29,11 @@ public struct ListProductGeneralView<
             ScrollView(showsIndicators: false) {
                 LazyVGrid(columns: column, spacing: 10) {
                     ForEach(products, id: \.id) { product in
-                        ProductItemGenericView(product: product)
-                        .padding(5)
+                        
+                        ProductItemGenericView(service: service, product: product)
+                        
+                        /*
+                         .padding(5)
                         .overlay {
                             VStack{
                                 Spacer()
@@ -36,9 +42,11 @@ public struct ListProductGeneralView<
                                 .padding(.trailing, 7)
                             }
                         }
+                        */
                     }
                 }
             }
         }
     }
+    
 }

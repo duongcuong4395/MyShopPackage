@@ -95,28 +95,8 @@ public protocol CartItemData: Codable, Identifiable, Equatable, Hashable {
     init (product: ProductType, quantity: Int)
 }
 
-public protocol ProductData: Codable, Identifiable, Hashable {
-    associatedtype CategoryType: CategoryData
-    var id: String { get set }
-    var name: String { get set }
-    var price: Double { get set }
-    var imageUrl: String { get set }
-    var category: CategoryType { get set }
-    var uiImage: UIImage? { get set }
-    
-    init(name: String
-         , price: Double
-         , imageUrl: String
-         , category: CategoryType)
-}
 
-public extension ProductData {
-    func convertMoney() -> String {
-        return price.convertMoney()// (NumberFormatter.currencyFormatter.string(from: NSNumber(value: price)) ?? "0") + " đ"
-    }
-}
-
-public protocol CategoryData: Codable, Identifiable, Hashable {
+public protocol CategoryData: Codable, Identifiable, Hashable, ItemOptionsBuilder {
     var id: String { get }
     var name: String { get }
     var imageName: String { get }
@@ -142,3 +122,93 @@ public extension NumberFormatter {
     }()
 }
 
+
+
+// MARK: ItemDelegate
+public protocol ItemDelegate {
+    func viewDetail<T: Decodable>(for model: T)
+    
+    func plusProduct<T: Decodable>(for model: T)
+    func minusProduct<T: Decodable>(for model: T)
+}
+
+public extension ItemDelegate {
+    func viewDetail<T: Decodable>(for model: T) {
+        return
+    }
+    
+    func plusProduct<T: Decodable>(for model: T) {
+        return
+    }
+    func minusProduct<T: Decodable>(for model: T) {
+        return
+    }
+}
+
+
+public enum ItemButtonShape {
+    case Image
+    case Button
+}
+
+public enum IconDetailType: String {
+    case Default = "ellipsis.circle"
+    case Down = "chevron.down"
+    case Up = "chevron.up"
+    case Right = "chevron.right"
+    case Route3D = "move.3d"
+    case Route = "point.topleft.down.curvedto.point.filled.bottomright.up"
+    case RouteBranch = "arrow.triangle.branch"
+    case RouteSwap = "arrow.triangle.swap"
+    case Star = "wand.and.stars"
+    
+    case Minus = "minus"
+    case Plus = "plus"
+}
+
+public protocol ItemOptionsBuilder: Decodable { }
+
+public extension ItemOptionsBuilder {
+    
+    @MainActor
+    @ViewBuilder
+    func getBtnViewDetail(with buttonShape: ItemButtonShape, with event: ItemDelegate, type: IconDetailType = .Default) -> some View {
+        buildItemButton(with: buttonShape, with: type.rawValue) {
+            event.viewDetail(for: self)
+        }
+    }
+    
+    @MainActor
+    @ViewBuilder
+    func getBtnPlusProduct(with buttonShape: ItemButtonShape, with event: ItemDelegate, type: IconDetailType = .Plus) -> some View {
+        buildItemButton(with: buttonShape, with: type.rawValue) {
+            event.plusProduct(for: self)
+        }
+    }
+    
+    @MainActor
+    @ViewBuilder
+    func getBtnMinusProduct(with buttonShape: ItemButtonShape, with event: ItemDelegate, type: IconDetailType = .Minus) -> some View {
+        buildItemButton(with: buttonShape, with: type.rawValue) {
+            event.minusProduct(for: self)
+        }
+    }
+    
+    @MainActor
+    @ViewBuilder
+    private func buildItemButton(with shape: ItemButtonShape, with imageName: String,  action: @escaping () -> Void) -> some View {
+        switch shape {
+        case .Button:
+            Button(action: {
+                action()
+            }, label: {
+                Image(systemName: imageName)
+            })
+        case .Image:
+            Image(systemName: imageName)
+                .onTapGesture {
+                    action()
+                }
+        }
+    }
+}
