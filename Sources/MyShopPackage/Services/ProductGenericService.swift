@@ -18,6 +18,7 @@ public enum CallAPIStatus {
 public protocol ProductGenericService: ObservableObject {
     associatedtype ProductDT: ProductData
     associatedtype CategoryDT: CategoryData
+    var product: ProductDT { get set }
     var products: [ProductDT] { get set }
     var callAPIStatus: CallAPIStatus { get set }
 }

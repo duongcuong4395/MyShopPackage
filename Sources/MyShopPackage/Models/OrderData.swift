@@ -102,6 +102,12 @@ public protocol ProductData: Codable, Identifiable, Hashable {
     var price: Double { get set }
     var imageUrl: String { get set }
     var category: CategoryType { get set }
+    var uiImage: UIImage? { get set }
+    
+    init(name: String
+         , price: Double
+         , imageUrl: String
+         , category: CategoryType)
 }
 
 public extension ProductData {
