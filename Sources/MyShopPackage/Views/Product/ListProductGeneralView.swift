@@ -29,22 +29,16 @@ public struct ListProductGeneralView<
             ScrollView(showsIndicators: false) {
                 LazyVGrid(columns: column, spacing: 10) {
                     ForEach(products, id: \.id) { product in
-                        
                         ProductItemGenericView(service: service, product: product)
-                        
-                        /*
-                         .padding(5)
+                        .padding(5)
                         .overlay {
-                            VStack{
-                                Spacer()
-                                CartItemOptionGenericView(service: service, product: product)
-                                .padding(.bottom, 60)
-                                .padding(.trailing, 7)
-                            }
-                        }
-                        */
-
-                        
+                           VStack{
+                               Spacer()
+                               CartItemOptionGenericView(service: service, product: product)
+                               .padding(.bottom, 60)
+                               .padding(.trailing, 7)
+                           }
+                       }
                     }
                 }
             }

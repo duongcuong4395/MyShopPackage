@@ -8,7 +8,7 @@
 import SwiftUI
 
 // Codable
-public protocol ProductData: Identifiable, Hashable, ItemOptionsBuilder {
+public protocol ProductData: Identifiable, Hashable {
     associatedtype CategoryType: CategoryData
     var id: String { get set }
     var name: String { get set }

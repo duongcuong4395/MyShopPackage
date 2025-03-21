@@ -26,19 +26,6 @@ where Service.ProductDT == ProductDT
     }
     
     public var body: some View {
-        if #available(iOS 17.0, *) {
-            product.getItemView(and: optionsView)
-                .onAppear{
-                    cartItem = service.getCartItem(form: product)
-                }
-                .onChange(of: service.cartItems) { oldValue, newValue in
-                    cartItem = service.getCartItem(form: product)
-                }
-        } else {
-            // Fallback on earlier versions
-        }
-        
-        /*
         VStack {
             ProductImageGenericView(product: product)
             Spacer()
@@ -51,68 +38,5 @@ where Service.ProductDT == ProductDT
             }
         }
         .padding(5)
-        */
-    }
-    
-    @ViewBuilder
-    var optionsView: some View {
-        
-        HStack {
-            Spacer()
-            
-            //if let cartItem = service.getCartItem(form: product) {
-            if let cartItem = cartItem {
-                HStack(spacing: 20) {
-                    product.getBtnPlusProduct(with: .Button, with: self)
-                        .font(.body.bold())
-                        .foregroundStyle(.green)
-                    
-
-                    Text("\(cartItem.quantity)")
-                        .font(.body.bold())
-                        .foregroundStyle(.black)
-
-                    product.getBtnMinusProduct(with: .Button, with: self)
-                        .font(.body.bold())
-                        .foregroundStyle(.green)
-                }
-                .padding(3)
-                .background(.white)
-                .clipShape(RoundedRectangle(cornerRadius: 25, style: .continuous))
-            } else {
-                Button(action: {
-                    withAnimation {
-                        service.addToCart(product)
-                    }
-                }, label: {
-                    Image(systemName: "plus")
-                        .font(.body.bold())
-                        .foregroundStyle(.white)
-                        .padding(3)
-                        .background(.green)
-                        .clipShape(Circle())
-                })
-            }
-        }
-    }
-    
-   
-}
-
-
-
-
-
-
-extension ProductItemGenericView {
-    //@MainActor
-    public func plusProduct<T>(for model: T) where T : Decodable {
-        guard let model = model as? ProductDT else { return }
-        service.addToCart(model)
-    }
-    
-    public func minusProduct<T>(for model: T) where T : Decodable {
-        guard let model = model as? ProductDT else { return }
-        service.removeFromCart(model, forAll: false)
     }
 }
