@@ -12,11 +12,18 @@ let package = Package(
             name: "MyShopPackage",
             targets: ["MyShopPackage"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "11.9.0"),
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "MyShopPackage"),
+            name: "MyShopPackage",
+            dependencies: [
+                            .product(name: "FirebaseFirestore", package: "firebase-ios-sdk")
+                        ]
+        ),
 
     ]
 )

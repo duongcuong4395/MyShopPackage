@@ -86,7 +86,7 @@ public protocol OrderData: Codable, Identifiable {
     init(userId: String, items: [CartItemType], totalAmount: Double, timestamp: Date)
 }
 
-public protocol CartItemData: Codable, Identifiable, Equatable {
+public protocol CartItemData: Codable, Identifiable, Equatable, Hashable {
     associatedtype ProductType: ProductData
     var id: String { get }
     var product: ProductType { get set}
