@@ -15,14 +15,14 @@ public enum CallAPIStatus {
     case Fail(Error)
 }
 
-protocol ProductGenericService: ObservableObject {
+public protocol ProductGenericService: ObservableObject {
     associatedtype ProductDT: ProductData
     associatedtype CategoryDT: CategoryData
     var products: [ProductDT] { get set }
     var callAPIStatus: CallAPIStatus { get set }
 }
 
-extension ProductGenericService {
+public extension ProductGenericService {
     
     func fetchAllProducts(completion: @escaping ([ProductDT]) -> Void) {
         let db = Firestore.firestore()
@@ -87,7 +87,7 @@ extension ProductGenericService {
     }
 }
 
-extension ProductGenericService {
+public extension ProductGenericService {
     func resetProduct() {
         self.products = []
     }
