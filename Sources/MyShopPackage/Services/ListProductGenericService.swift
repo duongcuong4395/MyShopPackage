@@ -17,7 +17,7 @@ public protocol ListProductGenericService: ObservableObject {
 }
 
 // MARK: Events with List Product on View
-extension ListProductGenericService {
+public extension ListProductGenericService {
     func resetProduct() {
         self.products = []
     }
@@ -45,7 +45,7 @@ extension ListProductGenericService {
     
 }
 
-extension ListProductGenericService {
+public extension ListProductGenericService {
     func fetchAllProducts(completion: @escaping ([ProductDT]) -> Void) {
         let db = Firestore.firestore()
         

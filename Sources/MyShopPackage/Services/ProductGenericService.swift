@@ -27,8 +27,6 @@ public protocol ProductGenericService: ObservableObject {
 // MARK: Events for CURL product data with firebase
 public extension ProductGenericService {
     
-    
-    
     func deleteProduct(_ product: ProductDT, conpletion: @escaping (Bool) -> Void) {
         let db = Firestore.firestore()
         db.collection("products").document(product.id).delete { error in
