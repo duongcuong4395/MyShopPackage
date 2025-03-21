@@ -14,7 +14,7 @@ public struct CartItemGenericView<CartService: CartServiceGeneric>: View {
     private var actions: [CartItemAction]
     private var onAction: (CartService.CartItemDT, CartItemAction) -> Void
 
-    init(cartService: CartService
+    public init(cartService: CartService
          , cartItem: CartService.CartItemDT
          , actions: [CartItemAction]
          , onAction: @escaping (CartService.CartItemDT, CartItemAction) -> Void) {
