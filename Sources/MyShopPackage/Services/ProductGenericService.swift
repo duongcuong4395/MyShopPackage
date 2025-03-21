@@ -18,45 +18,16 @@ public enum CallAPIStatus {
 public protocol ProductGenericService: ObservableObject {
     associatedtype ProductDT: ProductData
     associatedtype CategoryDT: CategoryData
+    
     var product: ProductDT { get set }
-    var products: [ProductDT] { get set }
-    var callAPIStatus: CallAPIStatus { get set }
+    var imageCloudService: ImageCloudService { get }
 }
 
+
+// MARK: Events for CURL product data with firebase
 public extension ProductGenericService {
     
-    func fetchAllProducts(completion: @escaping ([ProductDT]) -> Void) {
-        let db = Firestore.firestore()
-        
-        db.collection("products")
-            .getDocuments { snapshot, error in
-                guard let documents = snapshot?.documents, error == nil else {
-                    completion([])
-                    return
-                }
-                let products = documents.compactMap { doc -> ProductDT? in
-                    try? doc.data(as: ProductDT.self)
-                }
-                completion(products)
-            }
-    }
     
-    func fetchProducts(for category: CategoryDT
-                       , completion: @escaping ([ProductDT]) -> Void) {
-        let db = Firestore.firestore()
-        db.collection("products")
-            .whereField("category", isEqualTo: category.name)
-            .getDocuments { snapshot, error in
-                guard let documents = snapshot?.documents, error == nil else {
-                    completion([])
-                    return
-                }
-                let products = documents.compactMap { doc -> ProductDT? in
-                    try? doc.data(as: ProductDT.self)
-                }
-                completion(products)
-            }
-    }
     
     func deleteProduct(_ product: ProductDT, conpletion: @escaping (Bool) -> Void) {
         let db = Firestore.firestore()
@@ -88,29 +59,44 @@ public extension ProductGenericService {
     }
 }
 
+// MARK: Events for Upload/Delete Product to server(Firebase and ImageClound)
 public extension ProductGenericService {
-    func resetProduct() {
-        self.products = []
-    }
-    
-    @MainActor
-    func loadProducts(for category: CategoryDT) {
-        self.callAPIStatus = .Loading
-        if category.name == "Tất cả" {
-            fetchAllProducts{ [weak self] products in
-                DispatchQueue.main.async {
-                    self?.products = products
-                    self?.callAPIStatus = .Success
-                }
-            }
-        } else {
-            fetchProducts(for: category) { [weak self] products in
-                DispatchQueue.main.async {
-                    self?.products = products
-                    self?.callAPIStatus = .Success
-                }
-            }
-        }
-    }
+    /// **Hàm Upload Sản Phẩm**
+    func uploadProduct(completion: @escaping (Bool) -> Void) {
+        guard let imageData = product.uiImage?.jpegData(compressionQuality: 0.8) else {
+           completion(false)
+           return
+       }
+
+        imageCloudService.uploadImage(imageData: imageData) { [weak self] imageUrl in
+           guard let imageUrl = imageUrl, let priceValue = self?.product.price else {
+               completion(false)
+               return
+           }
+           
+           let newProduct = ProductDT(name: (self?.product.name ?? "")
+                                      , price: priceValue
+                                      , imageUrl: imageUrl
+                                      , category: (self?.product.category ?? .init()))
+
+           self?.addProduct(newProduct) {
+               completion(true)
+           }
+       }
+   }
+
+   /// **Hàm Xóa Sản Phẩm**
+    func deleteProduct(_ product: ProductDT, completion: @escaping (Bool) -> Void) {
+        imageCloudService.deleteImage(imageUrl: product.imageUrl) { [weak self] success in
+           if success {
+               self?.deleteProduct(product, conpletion: { isSuccess in
+                   completion(isSuccess)
+               })
+           } else {
+               completion(false)
+           }
+       }
+   }
 }
+
 
