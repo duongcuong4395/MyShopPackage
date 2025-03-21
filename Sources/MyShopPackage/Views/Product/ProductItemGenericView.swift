@@ -22,9 +22,7 @@ where Service.ProductDT == ProductDT
     }
     
     public var body: some View {
-        product.getItemView(and: EmptyView())
-        
-        /*
+        //product.getItemView(and: EmptyView())
         VStack {
             ProductImageGenericView(product: product)
             Spacer()
@@ -37,14 +35,7 @@ where Service.ProductDT == ProductDT
             }
         }
         .padding(5)
-        .overlay {
-            VStack{
-               Spacer()
-               
-               .padding(.bottom, 60)
-               .padding(.trailing, 7)
-            }
-        }*/
+        
     }
     
     var optionsView: some View {
