@@ -11,7 +11,7 @@ import FirebaseFirestore
 public protocol ListCategoryGenericService: ObservableObject {
     associatedtype CategoryDT: CategoryData
     var categories: [CategoryDT] { get set }
-    var categorySelected: CategoryDT? { get set }
+    var categorySelected: CategoryDT { get set }
 }
 
 public extension ListCategoryGenericService {
