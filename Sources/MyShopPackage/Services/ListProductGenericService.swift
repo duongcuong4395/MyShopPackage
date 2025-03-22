@@ -25,7 +25,7 @@ public extension ListProductGenericService {
     @MainActor
     func loadProducts(for category: CategoryDT) {
         self.callAPIStatus = .Loading
-        if category.name == "Tất cả" {
+        if category.name == "Tất Cả" {
             fetchAllProducts{ [weak self] products in
                 DispatchQueue.main.async {
                     self?.products = products
@@ -43,7 +43,7 @@ public extension ListProductGenericService {
     }
     
     func loadListProducts(for category: CategoryDT, completion: @escaping([ProductDT]) -> Void) {
-        if category.name == "Tất cả" {
+        if category.name == "Tất Cả" {
             fetchAllProducts{ products in
                 completion(products)
             }
@@ -68,6 +68,7 @@ public extension ListProductGenericService {
                 let products = documents.compactMap { doc -> ProductDT? in
                     try? doc.data(as: ProductDT.self)
                 }
+                print("=== fetchAllProducts", products.count)
                 completion(products)
             }
     }
@@ -85,6 +86,7 @@ public extension ListProductGenericService {
                 let products = documents.compactMap { doc -> ProductDT? in
                     try? doc.data(as: ProductDT.self)
                 }
+                print("=== fetchProducts", products.count, category)
                 completion(products)
             }
     }
