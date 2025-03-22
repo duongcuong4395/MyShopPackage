@@ -75,7 +75,7 @@ public extension ProductGenericService {
            let newProduct = ProductDT(name: (self?.product.name ?? "")
                                       , price: priceValue
                                       , imageUrl: imageUrl
-                                      , category: (self?.product.category ?? .init()))
+                                      , category: (self?.product.category ?? .init(name: "", imageUrl: "") ))
 
            self?.addProduct(newProduct) {
                completion(true)
