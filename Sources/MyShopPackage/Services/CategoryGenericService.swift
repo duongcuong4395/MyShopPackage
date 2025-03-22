@@ -51,7 +51,7 @@ public extension CategoryGenericService {
 // MARK: Events for Upload/Delete Product to server(Firebase and ImageClound)
 public extension CategoryGenericService {
     /// **Hàm Upload Sản Phẩm**
-    func uploadProduct(completion: @escaping (Bool) -> Void) {
+    func uploadCategory(completion: @escaping (Bool) -> Void) {
         guard let imageData = category.uiImage?.jpegData(compressionQuality: 0.8) else {
            completion(false)
            return
