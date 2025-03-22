@@ -30,6 +30,37 @@ public struct CartItemSelectedGenericView<CategoryDT: CategoryData>: View {
     public var body: some View {
         HStack {
             ForEach(Array(uniqueCategories.enumerated()), id: \.element.id) { index, cate in
+                AsyncImage(url: URL(string: cate.imageUrl)) { image in
+                    image
+                        .resizable()
+                        .padding(5)
+                        .clipShape(Circle())
+                        .frame(width: 35, height: 35)
+                        .overlay {
+                            VStack {
+                                HStack {
+                                    Spacer()
+                                    Text("\(categoryItemCount[cate] ?? 0)")
+                                        .font(.caption.bold())
+                                        .foregroundStyle(.white)
+                                        .padding(2)
+                                        .clipShape(Circle())
+                                        .background(.red)
+                                    
+                                }
+                                Spacer()
+                            }
+                            
+                        }
+                } placeholder: {
+                    VStack {
+                        Image(systemName: "xmark")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 100, height: 100)
+                    }
+                }
+                /*
                 Image(cate.imageName)
                     .resizable()
                     .padding(5)
@@ -51,6 +82,7 @@ public struct CartItemSelectedGenericView<CategoryDT: CategoryData>: View {
                         }
                         
                     }
+                */
             }
             
             Spacer()
