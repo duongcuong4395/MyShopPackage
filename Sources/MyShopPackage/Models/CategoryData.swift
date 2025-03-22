@@ -10,6 +10,7 @@ public protocol CategoryData: Codable, Identifiable, Hashable, Equatable {
     var id: String { get }
     var name: String { get set }
     var imageUrl: String { get set }
+    var uiImage: UIImage? { get set }
     
     init(name: String, imageUrl: String)
 }
