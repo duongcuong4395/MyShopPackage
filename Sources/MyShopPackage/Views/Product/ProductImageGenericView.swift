@@ -22,7 +22,7 @@ public struct ProductImageGenericView<ProductDT: ProductData>: View {
             switch phase {
             case .empty:
                 VStack {
-                    Image(product.category.imageName)
+                    Image(product.category.imageUrl)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 100, height: 100)
@@ -43,7 +43,7 @@ public struct ProductImageGenericView<ProductDT: ProductData>: View {
                     }
             @unknown default:
                 VStack {
-                    Image(product.category.imageName)
+                    Image(product.category.imageUrl)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 100, height: 100)
