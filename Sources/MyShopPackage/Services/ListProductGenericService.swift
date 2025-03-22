@@ -27,15 +27,17 @@ public extension ListProductGenericService {
         self.callAPIStatus = .Loading
         if category.name == "Tất Cả" {
             fetchAllProducts{ [weak self] products in
+                
+                
                 DispatchQueue.main.async {
-                    self?.products = products
+                    self?.products = products.sorted(by: { $0.category.name < $1.category.name })
                     self?.callAPIStatus = .Success
                 }
             }
         } else {
             fetchProducts(for: category) { [weak self] products in
                 DispatchQueue.main.async {
-                    self?.products = products
+                    self?.products = products.sorted(by: { $0.category.name < $1.category.name })
                     self?.callAPIStatus = .Success
                 }
             }
@@ -43,12 +45,15 @@ public extension ListProductGenericService {
     }
     
     func loadListProducts(for category: CategoryDT, completion: @escaping([ProductDT]) -> Void) {
+        self.callAPIStatus = .Loading
         if category.name.lowercased() == "tất cả" {
             fetchAllProducts{ products in
+                self.callAPIStatus = .Success
                 completion(products)
             }
         } else {
             fetchProducts(for: category) { products in
+                self.callAPIStatus = .Success
                 completion(products)
             }
         }
