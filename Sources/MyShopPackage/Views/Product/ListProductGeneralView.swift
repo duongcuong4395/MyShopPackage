@@ -16,12 +16,13 @@ public struct ListProductGeneralView<
 
     @ObservedObject private var cartService: CartService
     private var products: [ProductDT]
-    private var ViewApplyFor: ViewApplyFor = .BuyProduct
+    private var viewApplyFor: ViewApplyFor
     @State private var column = Array(repeating: GridItem(.flexible(), spacing: 1), count: 2)
     
-    public init(cartService: CartService, products: [ProductDT]) {
+    public init(viewApplyFor: ViewApplyFor, cartService: CartService, products: [ProductDT]) {
         self.cartService = cartService
         self.products = products
+        self.viewApplyFor = viewApplyFor
     }
     
     public var body: some View {
@@ -32,12 +33,16 @@ public struct ListProductGeneralView<
                         ProductItemGenericView(product: product)
                         .padding(5)
                         .overlay {
-                           VStack{
-                               Spacer()
-                               CartItemOptionGenericView(cartService: cartService, product: product)
-                               .padding(.bottom, 60)
-                               .padding(.trailing, 7)
-                           }
+                            if viewApplyFor == .AddProduct {
+                                VStack{
+                                    Spacer()
+                                    CartItemOptionGenericView(cartService: cartService, product: product)
+                                    
+                                    .padding(.bottom, 60)
+                                    .padding(.trailing, 7)
+                                }
+                            }
+                           
                        }
                     }
                 }
