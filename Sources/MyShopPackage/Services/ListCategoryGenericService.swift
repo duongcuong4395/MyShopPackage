@@ -11,9 +11,10 @@ import FirebaseFirestore
 public protocol ListCategoryGenericService: ObservableObject {
     associatedtype CategoryDT: CategoryData
     var categories: [CategoryDT] { get set }
+    var categorySelected: CategoryDT? { get set }
 }
 
-extension ListCategoryGenericService {
+public extension ListCategoryGenericService {
     func fetchAllCategory(completion: @escaping ([CategoryDT]) -> Void) {
         let db = Firestore.firestore()
         
