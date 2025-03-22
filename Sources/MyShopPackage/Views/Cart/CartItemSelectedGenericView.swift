@@ -29,7 +29,8 @@ public struct CartItemSelectedGenericView<CategoryDT: CategoryData>: View {
     
     public var body: some View {
         HStack {
-            ForEach(Array(uniqueCategories.enumerated()), id: \.element.id) { index, cate in
+            ForEach(uniqueCategories.indices, id: \.self) { index in
+                let cate = uniqueCategories[index]
                 AsyncImage(url: URL(string: cate.imageUrl)) { image in
                     image
                         .resizable()
