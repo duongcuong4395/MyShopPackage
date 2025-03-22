@@ -96,14 +96,7 @@ public protocol CartItemData: Codable, Identifiable, Equatable, Hashable {
 }
 
 
-public protocol CategoryData: Codable, Identifiable, Hashable, ItemOptionsBuilder {
-    var id: String { get }
-    var name: String { get }
-    var imageName: String { get }
-    var xIndex: CGFloat { get }
-    
-    init()
-}
+
 
 // MARK: Extension For Logic
 public extension Double {
