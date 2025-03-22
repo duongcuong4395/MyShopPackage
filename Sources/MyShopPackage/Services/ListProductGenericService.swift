@@ -45,6 +45,24 @@ public extension ListProductGenericService {
         }
     }
     
+    func loadListProducts(for category: CategoryDT, completion: @escaping([ProductDT]) -> Void) {
+        self.callAPIStatus = .Loading
+        print("=== loadProducts:", category.name)
+        if category.name == "Tất cả" {
+            fetchAllProducts{ [weak self] products in
+                self?.callAPIStatus = .Success
+                completion(products)
+            }
+        } else {
+            fetchProducts(for: category) { [weak self] products in
+                self?.callAPIStatus = .Success
+                completion(products)
+            }
+        }
+    }
+    
+    
+    
     
 }
 
