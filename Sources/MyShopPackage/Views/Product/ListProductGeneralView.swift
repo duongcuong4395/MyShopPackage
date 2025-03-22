@@ -33,7 +33,7 @@ public struct ListProductGeneralView<
                         ProductItemGenericView(product: product)
                         .padding(5)
                         .overlay {
-                            if viewApplyFor == .AddProduct {
+                            if viewApplyFor == .BuyProduct {
                                 VStack{
                                     Spacer()
                                     CartItemOptionGenericView(cartService: cartService, product: product)
