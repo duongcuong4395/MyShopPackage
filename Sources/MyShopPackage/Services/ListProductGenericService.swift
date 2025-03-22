@@ -43,7 +43,7 @@ public extension ListProductGenericService {
     }
     
     func loadListProducts(for category: CategoryDT, completion: @escaping([ProductDT]) -> Void) {
-        if category.name == "Tất Cả" {
+        if category.name.lowercased() == "tất cả" {
             fetchAllProducts{ products in
                 completion(products)
             }
@@ -77,7 +77,7 @@ public extension ListProductGenericService {
                        , completion: @escaping ([ProductDT]) -> Void) {
         let db = Firestore.firestore()
         db.collection("products")
-            .whereField("category.name", isEqualTo: category.name)
+            .whereField("category.id", isEqualTo: category.id)
             .getDocuments { snapshot, error in
                 guard let documents = snapshot?.documents, error == nil else {
                     completion([])
@@ -86,7 +86,7 @@ public extension ListProductGenericService {
                 let products = documents.compactMap { doc -> ProductDT? in
                     try? doc.data(as: ProductDT.self)
                 }
-                print("=== fetchProducts", products.count, category)
+                
                 completion(products)
             }
     }
