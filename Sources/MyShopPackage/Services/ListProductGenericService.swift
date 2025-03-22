@@ -31,6 +31,7 @@ public extension ListProductGenericService {
                 DispatchQueue.main.async {
                     self?.products = products
                     self?.callAPIStatus = .Success
+                    print("=== result", self?.products.count)
                 }
             }
         } else {
@@ -38,6 +39,7 @@ public extension ListProductGenericService {
                 DispatchQueue.main.async {
                     self?.products = products
                     self?.callAPIStatus = .Success
+                    print("=== result", self?.products.count)
                 }
             }
         }
