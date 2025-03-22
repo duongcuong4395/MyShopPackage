@@ -29,7 +29,7 @@ public struct ListProductGeneralView<
             ScrollView(showsIndicators: false) {
                 LazyVGrid(columns: column, spacing: 10) {
                     ForEach(products, id: \.id) { product in
-                        ProductItemGenericView(service: service, product: product)
+                        ProductItemGenericView(product: product)
                         .padding(5)
                         .overlay {
                            VStack{

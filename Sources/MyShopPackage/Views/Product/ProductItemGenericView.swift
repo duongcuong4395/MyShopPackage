@@ -7,19 +7,10 @@
 
 import SwiftUI
 
-public struct ProductItemGenericView<
-    
-    ProductDT: ProductData
-        , Service: CartServiceGeneric & ObservableObject>: View
-where Service.ProductDT == ProductDT
-{
-    
-    @ObservedObject private var service: Service
+public struct ProductItemGenericView<ProductDT: ProductData>: View {
     private var product: ProductDT
     
-    
-    public init(service: Service, product: ProductDT) {
-        self.service = service
+    public init(product: ProductDT) {
         self.product = product
     }
     
