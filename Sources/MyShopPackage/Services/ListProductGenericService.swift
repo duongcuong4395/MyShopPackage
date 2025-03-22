@@ -25,13 +25,11 @@ public extension ListProductGenericService {
     @MainActor
     func loadProducts(for category: CategoryDT) {
         self.callAPIStatus = .Loading
-        print("=== loadProducts:", category.name)
         if category.name == "Tất cả" {
             fetchAllProducts{ [weak self] products in
                 DispatchQueue.main.async {
                     self?.products = products
                     self?.callAPIStatus = .Success
-                    print("=== result", self?.products.count)
                 }
             }
         } else {
@@ -39,31 +37,22 @@ public extension ListProductGenericService {
                 DispatchQueue.main.async {
                     self?.products = products
                     self?.callAPIStatus = .Success
-                    print("=== result", self?.products.count)
                 }
             }
         }
     }
     
     func loadListProducts(for category: CategoryDT, completion: @escaping([ProductDT]) -> Void) {
-        self.callAPIStatus = .Loading
-        print("=== loadProducts:", category.name)
         if category.name == "Tất cả" {
-            fetchAllProducts{ [weak self] products in
-                self?.callAPIStatus = .Success
+            fetchAllProducts{ products in
                 completion(products)
             }
         } else {
-            fetchProducts(for: category) { [weak self] products in
-                self?.callAPIStatus = .Success
+            fetchProducts(for: category) { products in
                 completion(products)
             }
         }
     }
-    
-    
-    
-    
 }
 
 public extension ListProductGenericService {
@@ -79,7 +68,6 @@ public extension ListProductGenericService {
                 let products = documents.compactMap { doc -> ProductDT? in
                     try? doc.data(as: ProductDT.self)
                 }
-                print("=== fetchProducts:", products.count)
                 completion(products)
             }
     }
@@ -97,7 +85,6 @@ public extension ListProductGenericService {
                 let products = documents.compactMap { doc -> ProductDT? in
                     try? doc.data(as: ProductDT.self)
                 }
-                print("=== fetchProducts:", category.name, products.count)
                 completion(products)
             }
     }
