@@ -77,7 +77,7 @@ public extension ListProductGenericService {
                        , completion: @escaping ([ProductDT]) -> Void) {
         let db = Firestore.firestore()
         db.collection("products")
-            .whereField("category", isEqualTo: category.name)
+            .whereField("category.name", isEqualTo: category.name)
             .getDocuments { snapshot, error in
                 guard let documents = snapshot?.documents, error == nil else {
                     completion([])
