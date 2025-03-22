@@ -16,7 +16,7 @@ public struct ListProductGeneralView<
 
     @ObservedObject private var cartService: CartService
     private var products: [ProductDT]
-    private var viewApplyFor: ViewApplyFor
+    @State var viewApplyFor: ViewApplyFor
     @State private var column = Array(repeating: GridItem(.flexible(), spacing: 1), count: 2)
     
     public init(viewApplyFor: ViewApplyFor, cartService: CartService, products: [ProductDT]) {

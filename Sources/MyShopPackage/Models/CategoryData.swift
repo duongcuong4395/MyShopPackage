@@ -4,6 +4,7 @@
 //
 //  Created by Macbook on 22/3/25.
 //
+import SwiftUI
 
 public protocol CategoryData: Codable, Identifiable, Hashable, Equatable {
     var id: String { get }
