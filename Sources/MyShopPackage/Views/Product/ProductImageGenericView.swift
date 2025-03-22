@@ -22,12 +22,19 @@ public struct ProductImageGenericView<ProductDT: ProductData>: View {
             switch phase {
             case .empty:
                 VStack {
+                    ProgressView("Vui lòng đợi...")
+                        .padding()
+                        .effectOpenCloseView()
+                        .effectFadeInView(duration: 1, isLoop: true)
+                    /*
                     Image(product.category.imageUrl)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 100, height: 100)
                         .effectOpenCloseView()
                         .effectFadeInView(duration: 1, isLoop: true)
+                     */
+                        
                     
                 }
                 
@@ -43,12 +50,19 @@ public struct ProductImageGenericView<ProductDT: ProductData>: View {
                     }
             @unknown default:
                 VStack {
+                    ProgressView("Vui lòng đợi...")
+                        .padding()
+                        .effectOpenCloseView()
+                        .effectFadeInView(duration: 1, isLoop: true)
+                    /*
                     Image(product.category.imageUrl)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 100, height: 100)
                         .effectOpenCloseView()
                         .effectFadeInView(duration: 1, isLoop: true)
+                     */
+                        
                     
                 }
             }
