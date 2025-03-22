@@ -9,8 +9,10 @@ import SwiftUI
 public protocol CategoryData: Codable, Identifiable, Hashable, Equatable {
     var id: String { get }
     var name: String { get }
+    var imageUrl: String { get set }
     var imageName: String { get }
     var xIndex: CGFloat { get }
+    var uiImage: UIImage? { get set }
     
-    init()
+    init(name: String, imageUrl: String)
 }
