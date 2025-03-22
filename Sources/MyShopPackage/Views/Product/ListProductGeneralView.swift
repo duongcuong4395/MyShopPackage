@@ -11,16 +11,16 @@ import SwiftUI
 
 public struct ListProductGeneralView<
     ProductDT: ProductData,
-      Service: CartServiceGeneric & ObservableObject>: View
-        where Service.ProductDT == ProductDT {
+    CartService: CartServiceGeneric & ObservableObject>: View
+        where CartService.ProductDT == ProductDT {
 
-    @ObservedObject private var service: Service
+    @ObservedObject private var cartService: CartService
     private var products: [ProductDT]
     private var ViewApplyFor: ViewApplyFor = .BuyProduct
     @State private var column = Array(repeating: GridItem(.flexible(), spacing: 1), count: 2)
     
-    public init(service: Service, products: [ProductDT]) {
-        self.service = service
+    public init(cartService: CartService, products: [ProductDT]) {
+        self.cartService = cartService
         self.products = products
     }
     
@@ -34,7 +34,7 @@ public struct ListProductGeneralView<
                         .overlay {
                            VStack{
                                Spacer()
-                               CartItemOptionGenericView(service: service, product: product)
+                               CartItemOptionGenericView(cartService: cartService, product: product)
                                .padding(.bottom, 60)
                                .padding(.trailing, 7)
                            }

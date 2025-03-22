@@ -58,7 +58,7 @@ public struct CartItemGenericView<CartService: CartServiceGeneric>: View {
                         .font(.body.bold())
                 }
                 Spacer()
-                CartItemOptionGenericView(service: cartService, product: cartItem.product as! CartService.ProductDT)
+                CartItemOptionGenericView(cartService: cartService, product: cartItem.product as! CartService.ProductDT)
                     .frame(minWidth: UIScreen.main.bounds.width / 3)
                     .padding(7)
             } else {

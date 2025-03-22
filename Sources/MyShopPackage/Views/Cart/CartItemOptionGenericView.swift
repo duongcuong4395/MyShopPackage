@@ -10,15 +10,15 @@ import SwiftUI
 public struct CartItemOptionGenericView<
     ProductDT: ProductData,
     CartItemDT: CartItemData,
-    Service: CartServiceGeneric & ObservableObject
->: View where Service.ProductDT == ProductDT, Service.CartItemDT == CartItemDT {
+    CartService: CartServiceGeneric & ObservableObject
+>: View where CartService.ProductDT == ProductDT, CartService.CartItemDT == CartItemDT {
 
-    @ObservedObject private var service: Service
+    @ObservedObject private var cartService: CartService
     @State private var cartItem: CartItemDT?
     private var product: ProductDT
 
-    public init(service: Service, product: ProductDT) {
-        self.service = service
+    public init(cartService: CartService, product: ProductDT) {
+        self.cartService = cartService
         self.product = product
     }
     
@@ -26,11 +26,11 @@ public struct CartItemOptionGenericView<
         HStack {
             Spacer()
             
-            if let cartItem = service.getCartItem(form: product) {
+            if let cartItem = cartService.getCartItem(form: product) {
                 HStack(spacing: 20) {
                     Button(action: {
                         withAnimation {
-                            service.addToCart(product)
+                            cartService.addToCart(product)
                         }
                     }, label: {
                         Image(systemName: "plus")
@@ -44,7 +44,7 @@ public struct CartItemOptionGenericView<
 
                     Button(action: {
                         withAnimation {
-                            service.removeFromCart(product, forAll: false)
+                            cartService.removeFromCart(product, forAll: false)
                         }
                     }, label: {
                         Image(systemName: "minus")
@@ -58,7 +58,7 @@ public struct CartItemOptionGenericView<
             } else {
                 Button(action: {
                     withAnimation {
-                        service.addToCart(product)
+                        cartService.addToCart(product)
                     }
                 }, label: {
                     Image(systemName: "plus")
