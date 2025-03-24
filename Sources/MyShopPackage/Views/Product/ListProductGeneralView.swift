@@ -76,16 +76,24 @@ public struct ListProductGeneralView<
 
 struct ProductItemOptionGenericModifier<ProductDT: ProductData>: ViewModifier {
     
-    var product: ProductDT
-    var actions: [ProductItemAction]
-    var onAction: (ProductDT, ProductItemAction) -> Void
+    private var spacingItems: CGFloat
+    private var product: ProductDT
+    private var actions: [ProductItemAction]
+    private var onAction: (ProductDT, ProductItemAction) -> Void
+    
+    init(spacingItems: CGFloat = 20, product: ProductDT, actions: [ProductItemAction], onAction: @escaping (ProductDT, ProductItemAction) -> Void) {
+        self.spacingItems = spacingItems
+        self.product = product
+        self.actions = actions
+        self.onAction = onAction
+    }
     
     func body(content: Content) -> some View {
         content
             .overlay {
                 VStack{
                     Spacer()
-                    HStack {
+                    HStack(spacing: spacingItems) {
                         Spacer()
                         
                         ForEach(actions, id: \.self) { action in
@@ -110,14 +118,16 @@ struct ProductItemOptionGenericModifier<ProductDT: ProductData>: ViewModifier {
     }
 }
 
-extension View {
+public extension View {
     func productItemOptionGenericModifier<ProductDT: ProductData>(
-    product: ProductDT
-    , actions: [ProductItemAction]
-    , onAction: @escaping (ProductDT, ProductItemAction) -> Void
+        spacingItems: CGFloat = 20
+        , product: ProductDT
+        , actions: [ProductItemAction]
+        , onAction: @escaping (ProductDT, ProductItemAction) -> Void
     ) -> some View {
         return self.modifier(ProductItemOptionGenericModifier(
-            product: product
+            spacingItems: spacingItems
+            , product: product
             , actions: actions
             , onAction: onAction))
     }
@@ -204,7 +214,7 @@ public struct CartItemOptionGenericModifier<
 }
 
 
-extension View {
+public extension View {
     
     func cartItemOptionGenericModifier<
         ProductDT: ProductData
