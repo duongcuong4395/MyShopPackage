@@ -70,5 +70,6 @@ public struct CartItemOptionGenericView<
                 })
             }
         }
+        .shadow(color: .green, radius: 5, x: 5, y: 5)
     }
 }
