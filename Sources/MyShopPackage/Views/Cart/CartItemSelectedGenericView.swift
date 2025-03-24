@@ -55,37 +55,10 @@ public struct CartItemSelectedGenericView<CategoryDT: CategoryData>: View {
                         }
                 } placeholder: {
                     VStack {
-                        Image(systemName: "xmark")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 100, height: 100)
+                        ProgressView()
                     }
                 }
-                /*
-                Image(cate.imageName)
-                    .resizable()
-                    .padding(5)
-                    .clipShape(Circle())
-                    .frame(width: 35, height: 35)
-                    .overlay {
-                        VStack {
-                            HStack {
-                                Spacer()
-                                Text("\(categoryItemCount[cate] ?? 0)")
-                                    .font(.caption.bold())
-                                    .foregroundStyle(.white)
-                                    .padding(2)
-                                    .clipShape(Circle())
-                                    .background(.red)
-                                
-                            }
-                            Spacer()
-                        }
-                        
-                    }
-                */
             }
-            
             Spacer()
             HStack {
                 Text("\(totalPrice.convertMoney())")
