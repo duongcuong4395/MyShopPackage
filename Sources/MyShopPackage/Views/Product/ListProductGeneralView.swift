@@ -19,6 +19,7 @@ public struct ListProductGeneralView<
     @State var viewApplyFor: ViewApplyFor
     @State private var column = Array(repeating: GridItem(.flexible(), spacing: 1), count: 2)
     
+    private var positionOptionsView: PositionView = .BottomTrailing
     
     private var actionsForCart: [CartItemAction]
     private var onActionForCart: (CartService.ProductDT, CartItemAction) -> Void
@@ -28,6 +29,7 @@ public struct ListProductGeneralView<
     
     public init(viewApplyFor: ViewApplyFor, cartService: CartService
                 , products: [ProductDT]
+                , positionOptionsView: PositionView = .BottomTrailing
                 , actionsForCart: [CartItemAction]
                 , onActionForCart: @escaping (CartService.ProductDT, CartItemAction) -> Void
                 
@@ -37,6 +39,8 @@ public struct ListProductGeneralView<
         self.cartService = cartService
         self.products = products
         self.viewApplyFor = viewApplyFor
+        
+        self.positionOptionsView = positionOptionsView
         
         self.actionsForCart = actionsForCart
         self.onActionForCart = onActionForCart
@@ -55,7 +59,8 @@ public struct ListProductGeneralView<
                             ProductItemGenericView(product: product)
                                 .padding(5)
                                 .cartItemOptionGenericModifier(
-                                    cartService: cartService
+                                    positionView: positionOptionsView
+                                    , cartService: cartService
                                     , product: product
                                     , actions: actionsForCart
                                     , onAction: onActionForCart)
@@ -63,7 +68,8 @@ public struct ListProductGeneralView<
                             ProductItemGenericView(product: product)
                             .padding(5)
                             .productItemOptionGenericModifier(
-                                product: product
+                                positionView: positionOptionsView
+                                , product: product
                                 , actions: actionsForProduct
                                 , onAction: onActionForProduct)
                         }
