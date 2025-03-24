@@ -105,6 +105,17 @@ struct ProductItemOptionGenericModifier<ProductDT: ProductData>: ViewModifier {
                 case .TopLeading:
                     VStack {
                         HStack {
+                            MainView
+                                .padding(.top, 60)
+                                .padding(.leading, 7)
+                            Spacer()
+                            
+                        }
+                        Spacer()
+                    }
+                case .TopTrailing:
+                    VStack {
+                        HStack {
                             Spacer()
                             MainView
                                 .padding(.top, 60)
@@ -122,7 +133,18 @@ struct ProductItemOptionGenericModifier<ProductDT: ProductData>: ViewModifier {
                                 .padding(.trailing, 7)
                         }
                     }
-                default: EmptyView()
+                case .BottomLeading:
+                    VStack{
+                        Spacer()
+                        HStack {
+                            MainView
+                                .padding(.bottom, 60)
+                                .padding(.leading, 7)
+                            Spacer()
+                         
+                        }
+                    }
+                
                 }
                 
             }
@@ -198,6 +220,17 @@ public struct CartItemOptionGenericModifier<
                 case .TopLeading:
                     VStack {
                         HStack {
+                            MainView
+                                .padding(.top, 60)
+                                .padding(.leading, 7)
+                            Spacer()
+                            
+                        }
+                        Spacer()
+                    }
+                case .TopTrailing:
+                    VStack {
+                        HStack {
                             Spacer()
                             MainView
                                 .padding(.top, 60)
@@ -215,7 +248,18 @@ public struct CartItemOptionGenericModifier<
                                 .padding(.trailing, 7)
                         }
                     }
-                default: EmptyView()
+                case .BottomLeading:
+                    VStack{
+                        Spacer()
+                        HStack {
+                            MainView
+                                .padding(.bottom, 60)
+                                .padding(.leading, 7)
+                            Spacer()
+                         
+                        }
+                    }
+                
                 }
             }
     }
