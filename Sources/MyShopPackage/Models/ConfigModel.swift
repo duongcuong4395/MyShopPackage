@@ -8,5 +8,4 @@
 public enum ViewApplyFor: String, CaseIterable {
     case BuyProduct
     case EditProduct
-    case AddProduct
 }

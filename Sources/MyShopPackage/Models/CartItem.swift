@@ -16,8 +16,8 @@ public enum CartItemAction {
     var icon: String {
         switch self {
         case .remove: return "trash"
-        case .increaseQuantity: return "plus.circle"
-        case .decreaseQuantity: return "minus.circle"
+        case .increaseQuantity: return "plus"
+        case .decreaseQuantity: return "minus"
         case .favorite: return "heart"
         }
     }
