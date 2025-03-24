@@ -75,13 +75,17 @@ public struct ListProductGeneralView<
 }
 
 struct ProductItemOptionGenericModifier<ProductDT: ProductData>: ViewModifier {
-    
+    private var positionView: PositionView
     private var spacingItems: CGFloat
     private var product: ProductDT
     private var actions: [ProductItemAction]
     private var onAction: (ProductDT, ProductItemAction) -> Void
     
-    init(spacingItems: CGFloat = 20, product: ProductDT, actions: [ProductItemAction], onAction: @escaping (ProductDT, ProductItemAction) -> Void) {
+    init(
+        positionView: PositionView = .BottomTrailing
+        , spacingItems: CGFloat = 20, product: ProductDT, actions: [ProductItemAction], onAction: @escaping (ProductDT, ProductItemAction) -> Void) {
+            
+        self.positionView = positionView
         self.spacingItems = spacingItems
         self.product = product
         self.actions = actions
@@ -91,42 +95,66 @@ struct ProductItemOptionGenericModifier<ProductDT: ProductData>: ViewModifier {
     func body(content: Content) -> some View {
         content
             .overlay {
-                VStack{
-                    Spacer()
-                    HStack(spacing: spacingItems) {
+                switch positionView {
+                case .TopLeading:
+                    VStack {
+                        HStack {
+                            Spacer()
+                            MainView
+                                .padding(.top, 60)
+                                .padding(.trailing, 7)
+                        }
                         Spacer()
-                        
-                        ForEach(actions, id: \.self) { action in
-                            Button(action: {
-                                onAction(product, action)
-                            }, label: {
-                                Image(systemName: action.icon)
-                                    .font(.body.bold())
-                                    .foregroundStyle(.white)
-                                    .padding(3)
-                                    .background(.green)
-                                    .clipShape(Circle())
-                                
-                            })
-                            .shadow(color: .green, radius: 5, x: 5, y: 5)
+                    }
+                case .BottomTrailing:
+                    VStack{
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            MainView
+                                .padding(.bottom, 60)
+                                .padding(.trailing, 7)
                         }
                     }
-                    .padding(.bottom, 60)
-                    .padding(.trailing, 7)
+                default: EmptyView()
                 }
+                
             }
+    }
+    
+    @ViewBuilder
+    var MainView : some View {
+        HStack {
+            ForEach(actions, id: \.self) { action in
+                Button(action: {
+                    onAction(product, action)
+                }, label: {
+                    Image(systemName: action.icon)
+                        .font(.body.bold())
+                        .foregroundStyle(.white)
+                        .padding(3)
+                        .background(.green)
+                        .clipShape(Circle())
+                    
+                })
+                .shadow(color: .green, radius: 5, x: 5, y: 5)
+            }
+        }
+        
     }
 }
 
 public extension View {
     func productItemOptionGenericModifier<ProductDT: ProductData>(
-        spacingItems: CGFloat = 20
+        positionView: PositionView = .BottomTrailing
+        , spacingItems: CGFloat = 20
         , product: ProductDT
         , actions: [ProductItemAction]
         , onAction: @escaping (ProductDT, ProductItemAction) -> Void
     ) -> some View {
         return self.modifier(ProductItemOptionGenericModifier(
-            spacingItems: spacingItems
+            positionView: positionView
+            , spacingItems: spacingItems
             , product: product
             , actions: actions
             , onAction: onAction))
@@ -136,16 +164,21 @@ public extension View {
 public struct CartItemOptionGenericModifier<
     ProductDT: ProductData
         , CartService: CartServiceGeneric>: ViewModifier where CartService.ProductDT == ProductDT {
+    
+    private var positionView: PositionView = .BottomTrailing
     private var cartService: CartService
     private var product: CartService.ProductDT
     private var actions: [CartItemAction]
     private var onAction: (CartService.ProductDT, CartItemAction) -> Void
     
-    init(cartService: CartService
-         , product: ProductDT
-         , actions: [CartItemAction]
-         , onAction: @escaping (ProductDT, CartItemAction) -> Void) {
-        
+    init(
+        positionView: PositionView = .BottomTrailing
+        , cartService: CartService
+        , product: ProductDT
+        , actions: [CartItemAction]
+        , onAction: @escaping (ProductDT, CartItemAction) -> Void) {
+            
+        self.positionView = positionView
         self.cartService = cartService
         self.product = product
         self.actions = actions
@@ -155,61 +188,80 @@ public struct CartItemOptionGenericModifier<
     public func body(content: Content) -> some View {
         content
             .overlay {
-                VStack{
-                    Spacer()
-                    
-                    HStack {
+                switch positionView {
+                case .TopLeading:
+                    VStack {
+                        HStack {
+                            Spacer()
+                            MainView
+                                .padding(.top, 60)
+                                .padding(.trailing, 7)
+                        }
                         Spacer()
-                        
-                        if let cartItem = cartService.getCartItem(form: product) {
-                            HStack(spacing: 20) {
-                                if let actionPlus = actions.first(where: { $0 == .increaseQuantity }) {
-                                    Button(action: {
-                                        onAction(product, actionPlus)
-                                    }, label: {
-                                        Image(systemName: actionPlus.icon)
-                                            .font(.body.bold())
-                                            .foregroundStyle(.green)
-                                    })
-                                }
-                                Text("\(cartItem.quantity)")
-                                    .font(.body.bold())
-                                    .foregroundStyle(.black)
-
-                                if let actionMinus = actions.first(where: { $0 == .decreaseQuantity })  {
-                                    Button(action: {
-                                        onAction(product, actionMinus)
-                                    }, label: {
-                                        Image(systemName: actionMinus.icon)
-                                            .font(.body.bold())
-                                            .foregroundStyle(.green)
-                                    })
-                                }
-                                
-                            }
-                            .padding(3)
-                            .background(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 25, style: .continuous))
-                        } else {
-                            if let actionPlus = actions.first(where: { $0 == .increaseQuantity }) {
-                                Button(action: {
-                                    onAction(product, actionPlus)
-                                }, label: {
-                                    Image(systemName: actionPlus.icon)
-                                        .font(.body.bold())
-                                        .foregroundStyle(.white)
-                                        .padding(3)
-                                        .background(.green)
-                                        .clipShape(Circle())
-                                })
-                            }
+                    }
+                case .BottomTrailing:
+                    VStack{
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            MainView
+                                .padding(.bottom, 60)
+                                .padding(.trailing, 7)
                         }
                     }
-                    .shadow(color: .green, radius: 5, x: 5, y: 5)
-                    .padding(.bottom, 60)
-                    .padding(.trailing, 7)
+                default: EmptyView()
                 }
             }
+    }
+    
+    @ViewBuilder
+    var MainView: some View {
+        HStack(spacing: 20) {
+            if let cartItem = cartService.getCartItem(form: product) {
+                HStack(spacing: 20) {
+                    if let actionPlus = actions.first(where: { $0 == .increaseQuantity }) {
+                        Button(action: {
+                            onAction(product, actionPlus)
+                        }, label: {
+                            Image(systemName: actionPlus.icon)
+                                .font(.body.bold())
+                                .foregroundStyle(.green)
+                        })
+                    }
+                    Text("\(cartItem.quantity)")
+                        .font(.body.bold())
+                        .foregroundStyle(.black)
+
+                    if let actionMinus = actions.first(where: { $0 == .decreaseQuantity })  {
+                        Button(action: {
+                            onAction(product, actionMinus)
+                        }, label: {
+                            Image(systemName: actionMinus.icon)
+                                .font(.body.bold())
+                                .foregroundStyle(.green)
+                        })
+                    }
+                    
+                }
+                .padding(3)
+                .background(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 25, style: .continuous))
+            } else {
+                if let actionPlus = actions.first(where: { $0 == .increaseQuantity }) {
+                    Button(action: {
+                        onAction(product, actionPlus)
+                    }, label: {
+                        Image(systemName: actionPlus.icon)
+                            .font(.body.bold())
+                            .foregroundStyle(.white)
+                            .padding(3)
+                            .background(.green)
+                            .clipShape(Circle())
+                    })
+                }
+            }
+        }
+        .shadow(color: .green, radius: 5, x: 5, y: 5)
     }
 }
 
@@ -219,8 +271,8 @@ public extension View {
     func cartItemOptionGenericModifier<
         ProductDT: ProductData
             ,CartService: CartServiceGeneric > (
-                                            
-        cartService: CartService
+        positionView: PositionView = .BottomTrailing
+        , cartService: CartService
         , product: CartService.ProductDT
         , actions: [CartItemAction]
         , onAction: @escaping (CartService.ProductDT, CartItemAction) -> Void) -> some View
@@ -228,9 +280,18 @@ public extension View {
     {
             
         return self.modifier(CartItemOptionGenericModifier(
-            cartService: cartService
+            positionView: positionView
+            , cartService: cartService
             , product: product
             , actions: actions
             , onAction: onAction) )
     }
+}
+
+
+public enum PositionView {
+    case TopTrailing
+    case TopLeading
+    case BottomLeading
+    case BottomTrailing
 }
