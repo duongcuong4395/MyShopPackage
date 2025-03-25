@@ -26,9 +26,9 @@ public struct ListProductGeneralView<
     @State private var column = Array(repeating: GridItem(.flexible(), spacing: 1), count: 2)
     
     public init(viewApplyFor: ViewApplyFor
+                , positionOptionsView: (PositionView, EdgeInsets) = (.BottomTrailing, .init())
                 , cartService: CartService
                 , products: [ProductDT]
-                , positionOptionsView: (PositionView, EdgeInsets) = (.BottomTrailing, .init())
                 , cartConfig: CartActionConfig<ProductDT>
                 , productConfig: ProductActionConfig<ProductDT>
     ) {
@@ -53,16 +53,14 @@ public struct ListProductGeneralView<
                             ProductItemGenericView(product: product)
                                 .padding(5)
                                 .cartItemOptionGenericModifier(
-                                    positionView: positionOptionsView
-                                    , cartService: cartService
+                                    cartService: cartService
                                     , product: product
                                     , config: cartConfig)
                         case .EditProduct:
                             ProductItemGenericView(product: product)
                             .padding(5)
                             .productItemOptionGenericModifier(
-                                positionView: positionOptionsView
-                                , product: product
+                                product: product
                                 , config: productConfig)
                         }
                     }
@@ -75,8 +73,12 @@ public struct ListProductGeneralView<
 public struct ProductActionConfig<ProductDT: ProductData> {
     public let actions: [ProductItemAction]
     public let onAction: (ProductDT, ProductItemAction) -> Void
+    public var positionView: (position: PositionView, padding: EdgeInsets) = (.BottomTrailing, .init())
     
-    public init(actions: [ProductItemAction], onAction: @escaping (ProductDT, ProductItemAction) -> Void) {
+    public init(
+        positionView: (position: PositionView, padding: EdgeInsets) = (.BottomTrailing, .init()),
+        actions: [ProductItemAction], onAction: @escaping (ProductDT, ProductItemAction) -> Void) {
+        self.positionView = positionView
         self.actions = actions
         self.onAction = onAction
     }
@@ -85,26 +87,26 @@ public struct ProductActionConfig<ProductDT: ProductData> {
 public struct CartActionConfig<ProductDT: ProductData> {
     public let actions: [CartItemAction]
     public let onAction: (ProductDT, CartItemAction) -> Void
+    public var positionView: (position: PositionView, padding: EdgeInsets) = (.BottomTrailing, .init())
     
-    public init(actions: [CartItemAction], onAction: @escaping (ProductDT, CartItemAction) -> Void) {
+    public init(
+        positionView: (position: PositionView, padding: EdgeInsets) = (.BottomTrailing, .init()),
+        actions: [CartItemAction], onAction: @escaping (ProductDT, CartItemAction) -> Void) {
+            
+        self.positionView = positionView
         self.actions = actions
         self.onAction = onAction
     }
 }
 
 struct ProductItemOptionGenericModifier<ProductDT: ProductData>: ViewModifier {
-    
-    private var positionView: (position: PositionView, padding: EdgeInsets) = (.BottomTrailing, .init())
     private var spacingItems: CGFloat
     private var product: ProductDT
     private var config: ProductActionConfig<ProductDT>
     
-    init(
-        positionView: (PositionView, EdgeInsets) = (.BottomTrailing, .init())
-        , spacingItems: CGFloat = 20, product: ProductDT
+    init(spacingItems: CGFloat = 20, product: ProductDT
         , config: ProductActionConfig<ProductDT>) {
             
-        self.positionView = positionView
         self.spacingItems = spacingItems
         self.product = product
         self.config = config
@@ -114,8 +116,8 @@ struct ProductItemOptionGenericModifier<ProductDT: ProductData>: ViewModifier {
         content
             .overlay {
                 PositionedOverlay(
-                    position: positionView.position
-                    , padding: positionView.padding
+                    position: config.positionView.position
+                    , padding: config.positionView.padding
                     ) {
                     MainView
                 }
@@ -146,14 +148,12 @@ struct ProductItemOptionGenericModifier<ProductDT: ProductData>: ViewModifier {
 
 public extension View {
     func productItemOptionGenericModifier<ProductDT: ProductData>(
-        positionView: (PositionView, EdgeInsets) = (.BottomTrailing, .init())
-        , spacingItems: CGFloat = 20
+        spacingItems: CGFloat = 20
         , product: ProductDT
         , config: ProductActionConfig<ProductDT>
     ) -> some View {
         return self.modifier(ProductItemOptionGenericModifier(
-            positionView: positionView
-            , spacingItems: spacingItems
+            spacingItems: spacingItems
             , product: product
             , config: config))
     }
@@ -163,18 +163,15 @@ public struct CartItemOptionGenericModifier<
     ProductDT: ProductData
         , CartService: CartServiceGeneric>: ViewModifier where CartService.ProductDT == ProductDT {
     
-    private var positionView: (position: PositionView, padding: EdgeInsets) = (.BottomTrailing, .init())
     private var cartService: CartService
     private var product: CartService.ProductDT
     private var config: CartActionConfig<ProductDT>
     
     init(
-        positionView: (PositionView, EdgeInsets) = (.BottomTrailing, .init())
-        , cartService: CartService
+        cartService: CartService
         , product: ProductDT
         , config: CartActionConfig<ProductDT>) {
             
-        self.positionView = positionView
         self.cartService = cartService
         self.product = product
         self.config = config
@@ -184,8 +181,8 @@ public struct CartItemOptionGenericModifier<
         content
             .overlay {
                 PositionedOverlay(
-                    position: positionView.position
-                    , padding: positionView.padding
+                    position: config.positionView.position
+                    , padding: config.positionView.padding
                     ) {
                     MainView
                 }
@@ -247,15 +244,13 @@ public struct CartItemOptionGenericModifier<
 public extension View {
     
     func cartItemOptionGenericModifier<ProductDT: ProductData, CartService: CartServiceGeneric > (
-        positionView: (PositionView, EdgeInsets) = (.BottomTrailing, .init())
-        , cartService: CartService
+        cartService: CartService
         , product: CartService.ProductDT
         , config: CartActionConfig<ProductDT>) -> some View
     where CartService.ProductDT == ProductDT {
             
         return self.modifier(CartItemOptionGenericModifier(
-            positionView: positionView
-            , cartService: cartService
+            cartService: cartService
             , product: product
             , config: config) )
     }
