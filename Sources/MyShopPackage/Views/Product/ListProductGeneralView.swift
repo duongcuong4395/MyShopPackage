@@ -25,19 +25,14 @@ public struct ListProductGeneralView<
     
     public init(viewApplyFor: ViewApplyFor
                 , positionOptionsView: (PositionView, EdgeInsets) = (.BottomTrailing, .init())
-                //, cartService: CartService
                 , products: [ProductDT]
                 , cartConfig: CartActionConfig<ProductDT, CartService>
                 , productConfig: ProductActionConfig<ProductDT>
     ) {
-        //self.cartService = cartService
         self.products = products
         self.viewApplyFor = viewApplyFor
-        
         self.positionOptionsView = positionOptionsView
-        
         self.cartConfig = cartConfig
-        
         self.productConfig = productConfig
     }
     
@@ -70,12 +65,15 @@ public struct ListProductGeneralView<
 public struct ProductActionConfig<ProductDT: ProductData> {
     public let actions: [ProductItemAction]
     public let onAction: (ProductDT, ProductItemAction) -> Void
-    public var positionView: (position: PositionView, padding: EdgeInsets) = (.BottomTrailing, .init())
+    
+    public var configView: (position: PositionView, padding: EdgeInsets, spacingItems: CGFloat) = (.BottomTrailing, .init(), 20)
+    
     
     public init(
-        positionView: (position: PositionView, padding: EdgeInsets) = (.BottomTrailing, .init()),
-        actions: [ProductItemAction], onAction: @escaping (ProductDT, ProductItemAction) -> Void) {
-        self.positionView = positionView
+        configView: (position: PositionView, padding: EdgeInsets, spacingItems: CGFloat) = (.BottomTrailing, .init(), 20)
+        , actions: [ProductItemAction], onAction: @escaping (ProductDT, ProductItemAction) -> Void) {
+    
+        self.configView = configView
         self.actions = actions
         self.onAction = onAction
     }
@@ -117,8 +115,8 @@ struct ProductItemOptionGenericModifier<ProductDT: ProductData>: ViewModifier {
         content
             .overlay {
                 PositionedOverlay(
-                    position: config.positionView.position
-                    , padding: config.positionView.padding
+                    position: config.configView.position
+                    , padding: config.configView.padding
                     ) {
                     MainView
                 }
@@ -127,7 +125,7 @@ struct ProductItemOptionGenericModifier<ProductDT: ProductData>: ViewModifier {
     
     @ViewBuilder
     var MainView : some View {
-        HStack {
+        HStack(spacing: config.configView.spacingItems) {
             ForEach(config.actions, id: \.self) { action in
                 Button(action: {
                     config.onAction(product, action)
