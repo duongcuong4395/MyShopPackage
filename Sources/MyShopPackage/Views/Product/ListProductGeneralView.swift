@@ -12,7 +12,7 @@ public struct ListProductGeneralView<
     CartService: CartServiceGeneric & ObservableObject>: View
         where CartService.ProductDT == ProductDT {
 
-    @ObservedObject private var cartService: CartService
+    //@ObservedObject private var cartService: CartService
     private var products: [ProductDT]
     @State var viewApplyFor: ViewApplyFor
     
@@ -25,12 +25,12 @@ public struct ListProductGeneralView<
     
     public init(viewApplyFor: ViewApplyFor
                 , positionOptionsView: (PositionView, EdgeInsets) = (.BottomTrailing, .init())
-                , cartService: CartService
+                //, cartService: CartService
                 , products: [ProductDT]
                 , cartConfig: CartActionConfig<ProductDT, CartService>
                 , productConfig: ProductActionConfig<ProductDT>
     ) {
-        self.cartService = cartService
+        //self.cartService = cartService
         self.products = products
         self.viewApplyFor = viewApplyFor
         
