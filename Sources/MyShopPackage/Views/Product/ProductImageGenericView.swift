@@ -54,16 +54,6 @@ public struct ProductImageGenericView<ProductDT: ProductData>: View {
                         .padding()
                         .effectOpenCloseView()
                         .effectFadeInView(duration: 1, isLoop: true)
-                    /*
-                    Image(product.category.imageUrl)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 100, height: 100)
-                        .effectOpenCloseView()
-                        .effectFadeInView(duration: 1, isLoop: true)
-                     */
-                        
-                    
                 }
             }
             
