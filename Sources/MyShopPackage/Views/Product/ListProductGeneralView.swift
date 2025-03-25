@@ -73,13 +73,23 @@ public struct ListProductGeneralView<
 }
 
 public struct ProductActionConfig<ProductDT: ProductData> {
-    let actions: [ProductItemAction]
-    let onAction: (ProductDT, ProductItemAction) -> Void
+    public let actions: [ProductItemAction]
+    public let onAction: (ProductDT, ProductItemAction) -> Void
+    
+    public init(actions: [ProductItemAction], onAction: @escaping (ProductDT, ProductItemAction) -> Void) {
+        self.actions = actions
+        self.onAction = onAction
+    }
 }
 
 public struct CartActionConfig<ProductDT: ProductData> {
-    let actions: [CartItemAction]
-    let onAction: (ProductDT, CartItemAction) -> Void
+    public let actions: [CartItemAction]
+    public let onAction: (ProductDT, CartItemAction) -> Void
+    
+    public init(actions: [CartItemAction], onAction: @escaping (ProductDT, CartItemAction) -> Void) {
+        self.actions = actions
+        self.onAction = onAction
+    }
 }
 
 struct ProductItemOptionGenericModifier<ProductDT: ProductData>: ViewModifier {
