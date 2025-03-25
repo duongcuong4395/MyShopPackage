@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 public struct ListProductGeneralView<
     ProductDT: ProductData,
     CartService: CartServiceGeneric & ObservableObject>: View
@@ -20,8 +18,8 @@ public struct ListProductGeneralView<
     
     private var positionOptionsView: (PositionView, EdgeInsets) = (.BottomTrailing, .init())
     
-    private var cartConfig: CartActionConfig<ProductDT>
     private var productConfig: ProductActionConfig<ProductDT>
+    private var cartConfig: CartActionConfig<ProductDT, CartService>
     
     @State private var column = Array(repeating: GridItem(.flexible(), spacing: 1), count: 2)
     
@@ -29,7 +27,7 @@ public struct ListProductGeneralView<
                 , positionOptionsView: (PositionView, EdgeInsets) = (.BottomTrailing, .init())
                 , cartService: CartService
                 , products: [ProductDT]
-                , cartConfig: CartActionConfig<ProductDT>
+                , cartConfig: CartActionConfig<ProductDT, CartService>
                 , productConfig: ProductActionConfig<ProductDT>
     ) {
         self.cartService = cartService
@@ -53,8 +51,7 @@ public struct ListProductGeneralView<
                             ProductItemGenericView(product: product)
                                 .padding(5)
                                 .cartItemOptionGenericModifier(
-                                    cartService: cartService
-                                    , product: product
+                                    product: product
                                     , config: cartConfig)
                         case .EditProduct:
                             ProductItemGenericView(product: product)
@@ -84,15 +81,19 @@ public struct ProductActionConfig<ProductDT: ProductData> {
     }
 }
 
-public struct CartActionConfig<ProductDT: ProductData> {
+public struct CartActionConfig<ProductDT: ProductData, CartService: CartServiceGeneric> where CartService.ProductDT == ProductDT {
+    public let cartService: CartService
     public let actions: [CartItemAction]
     public let onAction: (ProductDT, CartItemAction) -> Void
     public var positionView: (position: PositionView, padding: EdgeInsets) = (.BottomTrailing, .init())
     
     public init(
-        positionView: (position: PositionView, padding: EdgeInsets) = (.BottomTrailing, .init()),
-        actions: [CartItemAction], onAction: @escaping (ProductDT, CartItemAction) -> Void) {
+        cartService: CartService
+        , positionView: (position: PositionView, padding: EdgeInsets) = (.BottomTrailing, .init())
+        ,actions: [CartItemAction]
+        , onAction: @escaping (ProductDT, CartItemAction) -> Void) {
             
+        self.cartService = cartService
         self.positionView = positionView
         self.actions = actions
         self.onAction = onAction
@@ -163,16 +164,12 @@ public struct CartItemOptionGenericModifier<
     ProductDT: ProductData
         , CartService: CartServiceGeneric>: ViewModifier where CartService.ProductDT == ProductDT {
     
-    private var cartService: CartService
     private var product: CartService.ProductDT
-    private var config: CartActionConfig<ProductDT>
+    private var config: CartActionConfig<ProductDT, CartService>
     
-    init(
-        cartService: CartService
-        , product: ProductDT
-        , config: CartActionConfig<ProductDT>) {
+    init(product: ProductDT
+        , config: CartActionConfig<ProductDT, CartService>) {
             
-        self.cartService = cartService
         self.product = product
         self.config = config
     }
@@ -192,7 +189,7 @@ public struct CartItemOptionGenericModifier<
     @ViewBuilder
     var MainView: some View {
         HStack(spacing: 20) {
-            if let cartItem = cartService.getCartItem(form: product) {
+            if let cartItem = config.cartService.getCartItem(form: product) {
                 HStack(spacing: 20) {
                     if let actionPlus = config.actions.first(where: { $0 == .increaseQuantity }) {
                         Button(action: {
@@ -244,14 +241,12 @@ public struct CartItemOptionGenericModifier<
 public extension View {
     
     func cartItemOptionGenericModifier<ProductDT: ProductData, CartService: CartServiceGeneric > (
-        cartService: CartService
-        , product: CartService.ProductDT
-        , config: CartActionConfig<ProductDT>) -> some View
+        product: CartService.ProductDT
+        , config: CartActionConfig<ProductDT, CartService>) -> some View
     where CartService.ProductDT == ProductDT {
             
         return self.modifier(CartItemOptionGenericModifier(
-            cartService: cartService
-            , product: product
+            product: product
             , config: config) )
     }
 }
