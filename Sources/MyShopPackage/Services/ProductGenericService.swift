@@ -78,7 +78,7 @@ public extension ProductGenericService {
 // MARK: Events for Upload/Delete Product to server(Firebase and ImageClound)
 public extension ProductGenericService {
     /// **Hàm Upload Sản Phẩm**
-    func uploadProduct(completion: @escaping (Bool) -> Void) {
+    func uploadProduct(for hasAddProduct: Bool = true , completion: @escaping (Bool) -> Void) {
         guard let imageData = product.uiImage?.jpegData(compressionQuality: 0.8) else {
            completion(false)
            return
@@ -94,10 +94,16 @@ public extension ProductGenericService {
                                       , price: priceValue
                                       , imageUrl: imageUrl
                                       , category: (self?.product.category ?? .init(name: "", imageUrl: "") ))
-
-           self?.addProduct(newProduct) {
-               completion(true)
-           }
+            if hasAddProduct {
+                self?.addProduct(newProduct) {
+                    completion(true)
+                }
+            } else {
+                self?.editProduct(newProduct, completion: { isSuccess in
+                    completion(isSuccess)
+                })
+            }
+           
        }
    }
 
