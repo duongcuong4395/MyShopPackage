@@ -55,6 +55,24 @@ public extension ProductGenericService {
             print("❌ Lỗi khi encode sản phẩm: \(error.localizedDescription)")
         }
     }
+    
+    func editProduct(_ product: ProductDT, completion: @escaping (Bool) -> Void) {
+        let db = Firestore.firestore()
+        do {
+            try db.collection("products").document(product.id).setData(from: product, merge: true) { error in
+                if let error = error {
+                    print("❌ Lỗi khi chỉnh sửa sản phẩm: \(error.localizedDescription)")
+                    completion(false)
+                } else {
+                    print("✅ Chỉnh sửa sản phẩm thành công!")
+                    completion(true)
+                }
+            }
+        } catch {
+            print("❌ Lỗi khi encode sản phẩm: \(error.localizedDescription)")
+            completion(false)
+        }
+    }
 }
 
 // MARK: Events for Upload/Delete Product to server(Firebase and ImageClound)
