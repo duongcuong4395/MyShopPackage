@@ -90,10 +90,11 @@ public extension ProductGenericService {
                return
            }
            
-           let newProduct = ProductDT(name: (self?.product.name ?? "")
+            let newProduct = ProductDT(id: (self?.product.id ?? ""), name: (self?.product.name ?? "")
                                       , price: priceValue
                                       , imageUrl: imageUrl
                                       , category: (self?.product.category ?? .init(name: "", imageUrl: "") ))
+            print("=== uploadProduct.product", newProduct)
             if hasAddProduct == true {
                 self?.addProduct(newProduct) {
                     completion(true)

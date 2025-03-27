@@ -21,6 +21,12 @@ public protocol ProductData: Codable, Identifiable, Hashable {
          , price: Double
          , imageUrl: String
          , category: CategoryType)
+    
+    init(id: String
+        , name: String
+         , price: Double
+         , imageUrl: String
+         , category: CategoryType)
 }
 
 public extension ProductData {
